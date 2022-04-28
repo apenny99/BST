@@ -2,17 +2,41 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
     public Node<Key, Value> root;
     private int count=0;
+    private int size=0;
 
     public BinarySearchTree() {
     }
 
     public int size() {
-        return size(root);
+        int size=0;
+        size(root);
+        return size;
     }
 
     //use Node's recursive size
     private int size(Node x) {
+        boolean r=false;
+        boolean l=false;
+        if(x.getRight()!=null){
+            size+=x.getRight().getSize();
+            r=true;
+        }
+        if(x.getLeft()!=null){
+            size+=x.getLeft().getSize();
+            l=true;
+        }
+        if(r&&l)
+            return size(x.getRight()) + size(x.getLeft());
 
+
+        if(r)
+            return size(x.getRight());
+
+        if(l)
+            return size(x.getLeft());
+
+        return 0;
+        
     }
 
     public boolean isEmpty() {
