@@ -25,8 +25,7 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
             root.setValue(value);
             count++;
         }
-
-        root = put(root, key, value);
+        put(root,key,value);
     }
 
     //recursive put
@@ -35,10 +34,11 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
     private Node<Key, Value> put(Node<Key, Value> n, Key key, Value val){
         int nodeKey = (int)n.getKey();
         int inpKey = (int)key;
-        Node tmpNode = new Node(key, val, 1);
+
         //compare the key to the key int of the current node and that is how you determine if the value goes to the left or the right
         if(nodeKey<inpKey){
             if(n.getRight()==null){
+                Node tmpNode = new Node(key, val, 1);
                 n.setRight(tmpNode);
                 return tmpNode;
             } else {
@@ -47,13 +47,14 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         }
         if(nodeKey>inpKey){
             if(n.getLeft()==null){
+                Node tmpNode = new Node(key, val, 1);
                 n.setLeft(tmpNode);
                 return tmpNode;
             } else {
                 return put(n.getLeft(),key,val);
             }
         }
-
+        return null;
     }
 
     //recursive get wrapper
