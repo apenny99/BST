@@ -36,7 +36,7 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
             return size(x.getLeft());
 
         return 0;
-        
+
     }
 
     public boolean isEmpty() {
@@ -139,7 +139,10 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
     //returns the node at the left most left branch of n
     private Node<Key, Value> min(Node<Key, Value> n) {
-
+        if(n.getLeft()!=null){
+            return min(n.getLeft());
+        }
+        return n;
     }
 
     public Key max() {
@@ -148,7 +151,10 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
     //returns the node at the right most right branch of n
     private Node<Key, Value> max(Node<Key, Value> n) {
-
+        if(n.getRight()!=null){
+            return min(n.getRight());
+        }
+        return n;
     }
 
     public String toString() {
