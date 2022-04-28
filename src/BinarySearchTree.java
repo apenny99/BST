@@ -16,6 +16,17 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
     }
 
     public boolean isEmpty() {
+        boolean tmp1=true ,tmp2 = true;
+        if(root.getLeft()==null && root.getRight()==null){
+            tmp1=false;
+        }
+        if(root.getKey()==null && root.getValue()==null){
+            tmp2=false;
+        }
+        if(!tmp1 && !tmp2){
+            return true;
+        }
+        return false;
 
     }
 
@@ -26,6 +37,7 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
             count++;
         }
         put(root,key,value);
+        count++;
     }
 
     //recursive put
