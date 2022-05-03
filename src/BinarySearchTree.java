@@ -102,11 +102,42 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
     //recursive get
     //returns null if the key does not exist
     private Value get(Node<Key, Value> n, Key key) {
+        int k = (int)key;
+        if((int)n.getKey()<k){
+            if(n.getRight()!=null)
+                return get(n.getRight(),key);
+        }
+        if((int)n.getKey()>k){
+            if(n.getLeft()!=null)
+                return get(n.getLeft(),key);
+        }
+        if((int)n.getKey()==k)
+            return n.getValue();
+
+        return null;
 
     }
 
     public boolean contains(Key key) {
+        int k=(int)key;
+        if(contains(root, k)==null){
+            return false;
+        }
+        return true;
 
+    }
+
+    private Node contains(Node n, int k){
+        if((int)n.getKey()==k){
+            return n;
+        }
+        if(k>(int)n.getKey()){
+            return contains(n.getRight(),k);
+        }
+        if(k<(int)n.getKey()){
+            return contains(n.getLeft(),k);
+        }
+        return null;
     }
 
     public Value remove(Key key) {
