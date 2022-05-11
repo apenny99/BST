@@ -11,6 +11,9 @@ public class Node<Key extends Comparable<Key>, Value> {
         this.value = value;
         this.size = size;
     }
+    public Node(){
+
+    }
 
     @Override
     public String toString() {
@@ -19,6 +22,7 @@ public class Node<Key extends Comparable<Key>, Value> {
                 ", value=" + value +
                 '}';
     }
+
 
     public Key getKey() {
         return key;

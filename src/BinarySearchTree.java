@@ -1,3 +1,12 @@
+/**
+ * BinarySearchTree
+ * a BST model
+ * Author: August Penny
+ * Collaborator(s): The names of anyone you collaborated with here
+ * Collaboration: Describe the collaboration that took place
+ * Date: 5/11/21
+ **/
+
 public class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
     public Node<Key, Value> root;
@@ -5,50 +14,32 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
     private int size=0;
 
     public BinarySearchTree() {
+        root=new Node<>();
     }
 
-    public int size() {
-        int size=0;
-        size(root);
-        return size;
+    public int size() {//returns sum of sizes of array
+        return size(root);
     }
 
     //use Node's recursive size
     private int size(Node x) {
-        boolean r=false;
-        boolean l=false;
-        if(x.getRight()!=null){
-            size+=x.getRight().getSize();
-            r=true;
+        if(x== null){
+            return 0;//returns 0 when it gets to bottom of tree
         }
-        if(x.getLeft()!=null){
-            size+=x.getLeft().getSize();
-            l=true;
-        }
-        if(r&&l)
-            return size(x.getRight()) + size(x.getLeft());
-
-
-        if(r)
-            return size(x.getRight());
-
-        if(l)
-            return size(x.getLeft());
-
-        return 0;
+        return x.getSize()+size(x.getLeft())+size(x.getRight());
 
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty() {//checks if the BST has any values in it
         boolean tmp1=true ,tmp2 = true;
         if(root.getLeft()==null && root.getRight()==null){
-            tmp1=false;
+            tmp1=false;//checks if the root node has any children
         }
         if(root.getKey()==null && root.getValue()==null){
-            tmp2=false;
+            tmp2=false;//cehcks if the root node has key or value
         }
         if(!tmp1 && !tmp2){
-            return true;
+            return true;//returns true only if both root is emoty and if it has no kids
         }
         return false;
 
@@ -56,45 +47,46 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
     //recursive put wrapper
     public void put(Key key, Value value) {
-        if(count==0){
+        if(count==0) {//if it is the first node to be added, sets the values to root node
             root.setValue(value);
+            root.setSize(1);
+            root.setKey(key);
             count++;
+
+            return;
+
         }
-        put(root,key,value);
-        count++;
+        root = put(root,key,value);
+
     }
 
-    //recursive put
-    //sets left/right or creates a new node appropriately, returns the
-    //modified node n
-    private Node<Key, Value> put(Node<Key, Value> n, Key key, Value val){
-        int nodeKey = (int)n.getKey();
-        int inpKey = (int)key;
 
-        //compare the key to the key int of the current node and that is how you determine if the value goes to the left or the right
-        if(nodeKey<inpKey){
-            if(n.getRight()==null){
-                Node tmpNode = new Node(key, val, 1);
-                n.setRight(tmpNode);
-                return tmpNode;
-            } else {
-                return put(n.getRight(),key,val);
-            }
+    private Node<Key, Value> put(Node<Key, Value> n, Key key, Value val){
+
+        if(n==null){//if reached the end of the tree then it is in the right place
+            n=new Node<>(key,val,1);
+            return n;
         }
-        if(nodeKey>inpKey){
-            if(n.getLeft()==null){
-                Node tmpNode = new Node(key, val, 1);
-                n.setLeft(tmpNode);
-                return tmpNode;
-            } else {
-                return put(n.getLeft(),key,val);
-            }
+
+        int compVal=key.compareTo(n.getKey());
+
+
+        if(compVal==-1){//goes right if the current node is less thjan the key
+            n.setLeft(put(n.getLeft(),key,val));
         }
-        return null;
+        if(compVal==1){//goes left if the current node is more than the key
+            n.setRight(put(n.getRight(),key,val));
+        }
+
+        return n;
     }
 
     //recursive get wrapper
     public Value get(Key key) {
+        if(root.getKey()==null){//if the array is empty then returns null
+            return null;
+        }
+
 
         return get(root, key);
     }
@@ -102,16 +94,18 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
     //recursive get
     //returns null if the key does not exist
     private Value get(Node<Key, Value> n, Key key) {
-        int k = (int)key;
-        if((int)n.getKey()<k){
+        if(n==null)//returns null if it reached the end of the tree
+            return null;
+        int k = key.compareTo(n.getKey());
+        if(k==1){//sends the search to the right
             if(n.getRight()!=null)
                 return get(n.getRight(),key);
         }
-        if((int)n.getKey()>k){
+        if(k==-1){//sends the sesrch left
             if(n.getLeft()!=null)
                 return get(n.getLeft(),key);
         }
-        if((int)n.getKey()==k)
+        if(k==0)//returns value of n if it equals the key
             return n.getValue();
 
         return null;
@@ -119,26 +113,13 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
     }
 
     public boolean contains(Key key) {
-        int k=(int)key;
-        if(contains(root, k)==null){
+        if(get(key)==null){
             return false;
         }
         return true;
-
     }
 
-    private Node contains(Node n, int k){
-        if((int)n.getKey()==k){
-            return n;
-        }
-        if(k>(int)n.getKey()){
-            return contains(n.getRight(),k);
-        }
-        if(k<(int)n.getKey()){
-            return contains(n.getLeft(),k);
-        }
-        return null;
-    }
+
 
     public Value remove(Key key) {
         Value v = get(key);
@@ -170,10 +151,10 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
     //returns the node at the left most left branch of n
     private Node<Key, Value> min(Node<Key, Value> n) {
-        if(n.getLeft()!=null){
-            return min(n.getLeft());
+        if(n.getLeft()==null){//if no more nodes below n on the left, returns n
+            return n;
         }
-        return n;
+        return min(n.getLeft());
     }
 
     public Key max() {
@@ -181,11 +162,11 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
     }
 
     //returns the node at the right most right branch of n
-    private Node<Key, Value> max(Node<Key, Value> n) {
-        if(n.getRight()!=null){
-            return min(n.getRight());
+    private Node<Key, Value> max(Node<Key, Value> n) {//if no nodes above n on the right, returns n
+        if(n.getRight()==null){
+            return n;
         }
-        return n;
+        return max(n.getRight());
     }
 
     public String toString() {
